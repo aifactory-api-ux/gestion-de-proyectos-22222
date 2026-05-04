@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY notification-service/ /app/backend/notification-service/
 COPY shared/ /app/backend/shared/
 
+ENV PYTHONPATH=/app
+
 EXPOSE 8003
 
 CMD ["uvicorn", "backend.notification_service.main:app", "--host", "0.0.0.0", "--port", "8003"]

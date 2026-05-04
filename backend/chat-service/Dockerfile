@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY chat-service/ /app/backend/chat-service/
 COPY shared/ /app/backend/shared/
 
+ENV PYTHONPATH=/app
+
 EXPOSE 8004
 
 CMD ["uvicorn", "backend.chat_service.main:app", "--host", "0.0.0.0", "--port", "8004"]

@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY auth-service/ /app/backend/auth-service/
 COPY shared/ /app/backend/shared/
 
+ENV PYTHONPATH=/app
+
 EXPOSE 8001
 
 CMD ["uvicorn", "backend.auth_service.main:app", "--host", "0.0.0.0", "--port", "8001"]
