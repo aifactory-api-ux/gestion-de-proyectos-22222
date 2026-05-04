@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY auth-service/ /app/backend/auth-service/
 COPY shared/ /app/backend/shared/
+COPY __init__.py /app/backend/__init__.py
 
 ENV PYTHONPATH=/app
 
