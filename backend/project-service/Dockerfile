@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY project-service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY project-service/ /app/backend/project-service/
+COPY project-service/ /app/backend/project_service/
 COPY shared/ /app/backend/shared/
 COPY __init__.py /app/backend/__init__.py
 

@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY auth-service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY auth-service/ /app/backend/auth-service/
+COPY auth-service/ /app/backend/auth_service/
 COPY shared/ /app/backend/shared/
 COPY __init__.py /app/backend/__init__.py
 
