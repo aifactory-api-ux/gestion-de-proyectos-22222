@@ -1,6 +1,6 @@
 import pytest
-from auth_service.schemas import UserCreate
-from auth_service import crud
+from backend.auth_service.schemas import UserCreate
+from backend.auth_service import crud
 
 
 class TestHealthCheck:

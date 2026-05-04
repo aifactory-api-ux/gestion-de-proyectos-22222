@@ -2,8 +2,7 @@ import os
 import sys
 import contextlib
 
-BACKEND_DIR = '/workspace/gestion-de-proyectos-22222/backend'
-sys.path.insert(0, BACKEND_DIR)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
 os.environ['AUTH_JWT_SECRET'] = 'test_secret_key_for_testing_only'
 os.environ['POSTGRES_HOST'] = 'localhost'
@@ -18,9 +17,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from shared.models import Base
-from auth_service.main import app
-from shared.db import get_db, create_tables
+from backend.shared.models import Base
+from backend.auth_service.main import app
+from backend.shared.db import get_db, create_tables
 
 @contextlib.asynccontextmanager
 async def noop_lifespan(app):

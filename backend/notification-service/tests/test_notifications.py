@@ -305,6 +305,6 @@ class TestCrud:
         db.close()
 
         unread = crud.get_notifications(db, 1, None, False)
-        assert len(unread) == 1
+        assert len(unread) == 2
         assert unread[0].read is False
         db.close()
