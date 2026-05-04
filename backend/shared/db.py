@@ -40,6 +40,6 @@ def create_tables():
         ]:
             if type_name not in existing_types:
                 values_str = ', '.join(f"'{v}'" for v in type_values)
-                conn.execute(text(f"CREATE TYPE {type_name} AS ENUM ({values_str})"))
+                conn.execute(text(f"DO $$ BEGIN CREATE TYPE {type_name} AS ENUM ({values_str}); EXCEPTION WHEN duplicate_object THEN NULL; END $$"))
         conn.commit()
     Base.metadata.create_all(bind=engine, checkfirst=True)
