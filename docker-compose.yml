@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: gp_admin
       POSTGRES_PASSWORD: supersecret
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -32,7 +32,7 @@ services:
       AUTH_JWT_SECRET: change_this_secret_in_production
       AUTH_JWT_EXPIRE_MINUTES: 60
     ports:
-      - "8001:8001"
+      - "18001:8001"
     depends_on:
       db:
         condition: service_healthy
@@ -56,7 +56,7 @@ services:
       AUTH_JWT_SECRET: change_this_secret_in_production
       AUTH_JWT_EXPIRE_MINUTES: 60
     ports:
-      - "8002:8002"
+      - "18002:8002"
     depends_on:
       db:
         condition: service_healthy
