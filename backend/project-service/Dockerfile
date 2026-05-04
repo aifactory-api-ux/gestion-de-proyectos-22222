@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY project-service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY project-service/ /app/
-COPY shared/ /app/backend/shared
+COPY project-service/ /app/backend/project-service/
+COPY shared/ /app/backend/shared/
 
 EXPOSE 8002
 

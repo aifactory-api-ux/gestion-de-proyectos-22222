@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY chat-service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY chat-service/ /app/
-COPY shared/ /app/backend/shared
+COPY chat-service/ /app/backend/chat-service/
+COPY shared/ /app/backend/shared/
 
 EXPOSE 8004
 

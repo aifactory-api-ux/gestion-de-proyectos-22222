@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY auth-service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY auth-service/ /app/
-COPY shared/ /app/backend/shared
+COPY auth-service/ /app/backend/auth-service/
+COPY shared/ /app/backend/shared/
 
 EXPOSE 8001
 
