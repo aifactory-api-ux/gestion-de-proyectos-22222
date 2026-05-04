@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 import sys
@@ -28,4 +28,10 @@ def get_db() -> Generator[Session, None, None]:
 
 
 def create_tables():
+    with engine.connect() as conn:
+        conn.execute(text("CREATE TYPE IF NOT EXISTS userrole AS ENUM ('admin', 'manager', 'viewer')"))
+        conn.execute(text("CREATE TYPE IF NOT EXISTS projectstatus AS ENUM ('on_track', 'at_risk', 'delayed', 'completed')"))
+        conn.execute(text("CREATE TYPE IF NOT EXISTS notificationtype AS ENUM ('budget_deviation', 'milestone', 'forecast_change', 'ai_message')"))
+        conn.execute(text("CREATE TYPE IF NOT EXISTS messagesender AS ENUM ('user', 'ai')"))
+        conn.commit()
     Base.metadata.create_all(bind=engine)
