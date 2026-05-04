@@ -70,6 +70,6 @@ describe('Avatar', () => {
     const longNameUser = { ...mockUser, full_name: 'John Michael Doe Smith' }
     const { container } = render(<Avatar user={longNameUser} />)
     const initials = container.querySelector('div')
-    expect(initials?.textContent?.length).toBeLessThanOrEqual(2)
+    expect(initials?.textContent?.length).toBe(2)
   })
 })

@@ -24,7 +24,7 @@ export function Avatar({ user }: AvatarProps) {
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: '14px',
-      fontWeight: 600,
+      fontWeight: '600',
     }}>
       {initials}
     </div>
