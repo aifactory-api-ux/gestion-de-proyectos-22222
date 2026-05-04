@@ -32,13 +32,14 @@ def create_tables():
         result = conn.execute(text("SELECT typname FROM pg_type WHERE typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public') AND typname IN ('userrole', 'projectstatus', 'notificationtype', 'messagesender')"))
         existing_types = {row[0] for row in result}
 
-        if 'userrole' not in existing_types:
-            conn.execute(text("CREATE TYPE userrole AS ENUM ('admin', 'manager', 'viewer')"))
-        if 'projectstatus' not in existing_types:
-            conn.execute(text("CREATE TYPE projectstatus AS ENUM ('on_track', 'at_risk', 'delayed', 'completed')"))
-        if 'notificationtype' not in existing_types:
-            conn.execute(text("CREATE TYPE notificationtype AS ENUM ('budget_deviation', 'milestone', 'forecast_change', 'ai_message')"))
-        if 'messagesender' not in existing_types:
-            conn.execute(text("CREATE TYPE messagesender AS ENUM ('user', 'ai')"))
+        for type_name, type_values in [
+            ('userrole', ('admin', 'manager', 'viewer')),
+            ('projectstatus', ('on_track', 'at_risk', 'delayed', 'completed')),
+            ('notificationtype', ('budget_deviation', 'milestone', 'forecast_change', 'ai_message')),
+            ('messagesender', ('user', 'ai'))
+        ]:
+            if type_name not in existing_types:
+                values_str = ', '.join(f"'{v}'" for v in type_values)
+                conn.execute(text(f"CREATE TYPE {type_name} AS ENUM ({values_str})"))
         conn.commit()
     Base.metadata.create_all(bind=engine, checkfirst=True)
