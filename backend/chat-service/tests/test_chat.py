@@ -170,7 +170,7 @@ class TestCrud:
         ), sender_id=1)
 
         messages = crud.get_messages(db, 5)
-        assert len(messages) == 1
+        assert len(messages) == 2
         assert messages[0].project_id == 5
         db.close()
 

@@ -1,26 +1,22 @@
 import os
 import sys
 import contextlib
-
-BACKEND_DIR = '/workspace/gestion-de-proyectos-22222/backend'
-sys.path.insert(0, BACKEND_DIR)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
 os.environ['AUTH_JWT_SECRET'] = 'test_secret_key_for_testing_only'
-os.environ['POSTGRES_HOST'] = 'localhost'
-os.environ['POSTGRES_PORT'] = '5432'
-os.environ['POSTGRES_DB'] = 'test_db'
-os.environ['POSTGRES_USER'] = 'test_user'
-os.environ['POSTGRES_PASSWORD'] = 'test_password'
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+from unittest.mock import MagicMock
 
-from shared.models import Base
-from auth_service.main import app
-from shared.db import get_db, create_tables
+from backend.shared.models import Base, UserModel
+from backend.project_service.main import app
+from backend.project_service import crud
+from backend.shared.db import get_db
+from backend.project_service.dependencies import get_current_user
 
 @contextlib.asynccontextmanager
 async def noop_lifespan(app):
@@ -38,22 +34,31 @@ def setup_db():
     Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture
-def client():
-    def override_db():
+def mock_user():
+    user = MagicMock()
+    user.id = 1
+    user.email = "manager@example.com"
+    user.full_name = "Test Manager"
+    user.role = "manager"
+    user.is_active = True
+    return user
+
+@pytest.fixture
+def client(mock_user):
+    def override_get_db():
         db = TestingSession()
         try:
             yield db
         finally:
             db.close()
-    app.dependency_overrides[get_db] = override_db
+
+    async def override_get_current_user():
+        return mock_user
+
+    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_current_user] = override_get_current_user
+
     with TestClient(app) as c:
         yield c
-    app.dependency_overrides.clear()
 
-@pytest.fixture
-def db_session():
-    db = TestingSession()
-    try:
-        yield db
-    finally:
-        db.close()
+    app.dependency_overrides.clear()

@@ -15,11 +15,17 @@ POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "supersecret")
 
 DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+_engine = None
 
+def get_engine():
+    global _engine
+    if _engine is None:
+        _engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+    return _engine
 
 def get_db() -> Generator[Session, None, None]:
+    engine = get_engine()
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     try:
         yield db
@@ -28,6 +34,7 @@ def get_db() -> Generator[Session, None, None]:
 
 
 def create_tables():
+    engine = get_engine()
     with engine.connect() as conn:
         result = conn.execute(text("SELECT typname FROM pg_type WHERE typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public') AND typname IN ('userrole', 'projectstatus', 'notificationtype', 'messagesender')"))
         existing_types = {row[0] for row in result}

@@ -14,15 +14,15 @@ class ProjectCreate(BaseModel):
 
 
 class ProjectUpdate(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    start_date: Optional[date]
-    end_date: Optional[date]
-    budget: Optional[float]
-    executed: Optional[float]
-    forecast: Optional[float]
-    status: Optional[Literal["on_track", "at_risk", "delayed", "completed"]]
-    manager_id: Optional[int]
+    name: Optional[str] = None
+    description: Optional[str] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    budget: Optional[float] = None
+    executed: Optional[float] = None
+    forecast: Optional[float] = None
+    status: Optional[Literal["on_track", "at_risk", "delayed", "completed"]] = None
+    manager_id: Optional[int] = None
 
 
 class KPI(BaseModel):
