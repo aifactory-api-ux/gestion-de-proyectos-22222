@@ -20,8 +20,8 @@ services:
 
   auth-service:
     build:
-      context: ./backend
-      dockerfile: ./auth-service/Dockerfile
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
 
     environment:
       POSTGRES_HOST: db
@@ -44,8 +44,8 @@ services:
 
   project-service:
     build:
-      context: ./backend
-      dockerfile: ./project-service/Dockerfile
+      context: ./backend/project-service
+      dockerfile: Dockerfile
 
     environment:
       POSTGRES_HOST: db
@@ -68,8 +68,8 @@ services:
 
   notification-service:
     build:
-      context: ./backend
-      dockerfile: ./notification-service/Dockerfile
+      context: ./backend/notification-service
+      dockerfile: Dockerfile
 
     environment:
       POSTGRES_HOST: db
@@ -92,8 +92,8 @@ services:
 
   chat-service:
     build:
-      context: ./backend
-      dockerfile: ./chat-service/Dockerfile
+      context: ./backend/chat-service
+      dockerfile: Dockerfile
 
     environment:
       POSTGRES_HOST: db
