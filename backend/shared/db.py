@@ -29,9 +29,33 @@ def get_db() -> Generator[Session, None, None]:
 
 def create_tables():
     with engine.connect() as conn:
-        conn.execute(text("CREATE TYPE IF NOT EXISTS userrole AS ENUM ('admin', 'manager', 'viewer')"))
-        conn.execute(text("CREATE TYPE IF NOT EXISTS projectstatus AS ENUM ('on_track', 'at_risk', 'delayed', 'completed')"))
-        conn.execute(text("CREATE TYPE IF NOT EXISTS notificationtype AS ENUM ('budget_deviation', 'milestone', 'forecast_change', 'ai_message')"))
-        conn.execute(text("CREATE TYPE IF NOT EXISTS messagesender AS ENUM ('user', 'ai')"))
+        conn.execute(text("""
+            DO $$ BEGIN
+                CREATE TYPE userrole AS ENUM ('admin', 'manager', 'viewer');
+            EXCEPTION
+                WHEN duplicate_object THEN null;
+            END $$
+        """))
+        conn.execute(text("""
+            DO $$ BEGIN
+                CREATE TYPE projectstatus AS ENUM ('on_track', 'at_risk', 'delayed', 'completed');
+            EXCEPTION
+                WHEN duplicate_object THEN null;
+            END $$
+        """))
+        conn.execute(text("""
+            DO $$ BEGIN
+                CREATE TYPE notificationtype AS ENUM ('budget_deviation', 'milestone', 'forecast_change', 'ai_message');
+            EXCEPTION
+                WHEN duplicate_object THEN null;
+            END $$
+        """))
+        conn.execute(text("""
+            DO $$ BEGIN
+                CREATE TYPE messagesender AS ENUM ('user', 'ai');
+            EXCEPTION
+                WHEN duplicate_object THEN null;
+            END $$
+        """))
         conn.commit()
     Base.metadata.create_all(bind=engine)
