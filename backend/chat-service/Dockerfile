@@ -15,4 +15,4 @@ COPY shared/ /app/backend/shared/
 
 EXPOSE 8004
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8004"]
+CMD ["uvicorn", "backend.chat_service.main:app", "--host", "0.0.0.0", "--port", "8004"]
