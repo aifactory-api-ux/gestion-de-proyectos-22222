@@ -1,15 +1,22 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from backend.shared.db import get_db
+from backend.shared.db import get_db, create_tables
 from backend.shared.models import ChatMessage
 from backend.chat_service.schemas import ChatMessageCreate
 from backend.chat_service import crud
 from backend.chat_service.dependencies import get_current_user
 
-app = FastAPI(title="Chat Service", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
+
+app = FastAPI(title="Chat Service", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

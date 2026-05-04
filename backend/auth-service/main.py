@@ -1,15 +1,22 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import timedelta
 
-from backend.shared.db import get_db
+from backend.shared.db import get_db, create_tables
 from backend.shared.security import create_access_token
 from backend.auth_service.schemas import UserCreate, UserLogin, Token, User
 from backend.auth_service import crud
 from backend.auth_service.dependencies import get_current_user
 
-app = FastAPI(title="Auth Service", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
+
+app = FastAPI(title="Auth Service", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

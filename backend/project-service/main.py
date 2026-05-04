@@ -1,15 +1,22 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from backend.shared.db import get_db
+from backend.shared.db import get_db, create_tables
 from backend.project_service.schemas import ProjectCreate, ProjectUpdate, KPI, TrendPoint
 from backend.project_service import crud
 from backend.project_service.dependencies import get_current_user
 from backend.shared.models import Project
 
-app = FastAPI(title="Project Service", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
+
+app = FastAPI(title="Project Service", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
