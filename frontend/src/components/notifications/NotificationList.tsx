@@ -52,11 +52,11 @@ export function NotificationList({
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
               {!notification.read && (
-                <Button variant="secondary" onClick={(e) => { e.stopPropagation(); onMarkAsRead(notification.id); }}>
+                <Button variant="secondary" onClick={() => { onMarkAsRead(notification.id); }}>
                   Mark Read
                 </Button>
               )}
-              <Button variant="tertiary" onClick={(e) => { e.stopPropagation(); onDelete(notification.id); }}>
+              <Button variant="tertiary" onClick={() => { onDelete(notification.id); }}>
                 Delete
               </Button>
             </div>
