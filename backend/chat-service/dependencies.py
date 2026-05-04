@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from backend.shared.db import get_db
 from backend.shared.security import decode_access_token
 from backend.auth_service.crud import get_user_by_id
+from backend.chat_service.crud import get_user_by_id as chat_get_user_by_id
 
 security = HTTPBearer()
 
