@@ -41,4 +41,4 @@ def create_tables():
         if 'messagesender' not in existing_types:
             conn.execute(text("CREATE TYPE messagesender AS ENUM ('user', 'ai')"))
         conn.commit()
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine, checkfirst=True)
