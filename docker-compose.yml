@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: gp_admin
       POSTGRES_PASSWORD: supersecret
     ports:
-      - "15433:5432"
+      - "15443:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
