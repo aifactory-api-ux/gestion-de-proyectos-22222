@@ -80,7 +80,7 @@ services:
       AUTH_JWT_SECRET: change_this_secret_in_production
       AUTH_JWT_EXPIRE_MINUTES: 60
     ports:
-      - "8003:8003"
+      - "18003:8003"
     depends_on:
       db:
         condition: service_healthy
@@ -104,7 +104,7 @@ services:
       AUTH_JWT_SECRET: change_this_secret_in_production
       AUTH_JWT_EXPIRE_MINUTES: 60
     ports:
-      - "8004:8004"
+      - "18004:8004"
     depends_on:
       db:
         condition: service_healthy
@@ -120,10 +120,10 @@ services:
       dockerfile: Dockerfile
 
     environment:
-      VITE_API_BASE_URL: http://localhost:8001
-      VITE_PROJECT_API_URL: http://localhost:8002
-      VITE_NOTIFICATION_API_URL: http://localhost:8003
-      VITE_CHAT_API_URL: http://localhost:8004
+      VITE_API_BASE_URL: http://localhost:18001
+      VITE_PROJECT_API_URL: http://localhost:18002
+      VITE_NOTIFICATION_API_URL: http://localhost:18003
+      VITE_CHAT_API_URL: http://localhost:18004
     ports:
       - "5173:5173"
     depends_on:
