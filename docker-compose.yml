@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: gp_db
+    environment:
+      POSTGRES_DB: gestion_proyectos
+      POSTGRES_USER: gp_admin
+      POSTGRES_PASSWORD: supersecret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gp_admin -d gestion_proyectos"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build:
+      context: ./backend
+      dockerfile: auth-service/Dockerfile
+    container_name: gp_auth_service
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: gestion_proyectos
+      POSTGRES_USER: gp_admin
+      POSTGRES_PASSWORD: supersecret
+      AUTH_JWT_SECRET: change_this_secret_in_production
+      AUTH_JWT_EXPIRE_MINUTES: 60
+    ports:
+      - "8001:8001"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8001/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  project-service:
+    build:
+      context: ./backend
+      dockerfile: project-service/Dockerfile
+    container_name: gp_project_service
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: gestion_proyectos
+      POSTGRES_USER: gp_admin
+      POSTGRES_PASSWORD: supersecret
+      AUTH_JWT_SECRET: change_this_secret_in_production
+      AUTH_JWT_EXPIRE_MINUTES: 60
+    ports:
+      - "8002:8002"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8002/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  notification-service:
+    build:
+      context: ./backend
+      dockerfile: notification-service/Dockerfile
+    container_name: gp_notification_service
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: gestion_proyectos
+      POSTGRES_USER: gp_admin
+      POSTGRES_PASSWORD: supersecret
+      AUTH_JWT_SECRET: change_this_secret_in_production
+      AUTH_JWT_EXPIRE_MINUTES: 60
+    ports:
+      - "8003:8003"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8003/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  chat-service:
+    build:
+      context: ./backend
+      dockerfile: chat-service/Dockerfile
+    container_name: gp_chat_service
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: gestion_proyectos
+      POSTGRES_USER: gp_admin
+      POSTGRES_PASSWORD: supersecret
+      AUTH_JWT_SECRET: change_this_secret_in_production
+      AUTH_JWT_EXPIRE_MINUTES: 60
+    ports:
+      - "8004:8004"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8004/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gp_frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:8001
+      VITE_PROJECT_API_URL: http://localhost:8002
+      VITE_NOTIFICATION_API_URL: http://localhost:8003
+      VITE_CHAT_API_URL: http://localhost:8004
+    ports:
+      - "5173:5173"
+    depends_on:
+      - auth-service
+      - project-service
+      - notification-service
+      - chat-service
+
+volumes:
+  postgres_data:
